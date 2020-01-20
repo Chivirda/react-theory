@@ -34,34 +34,43 @@ class App extends Component{
     this.setState({cars})
   }
 
-  render () {
+  render() {
     const divStyle = {
       textAlign: 'center'
-    };
+    }
 
-    // const cars = this.state.cars;
+    let cars = null
+
+    if (this.state.showCars) {
+      cars = this.state.cars.map((car, index) => {
+        return (
+          <Car
+            key={index}
+            name={car.name}
+            year={car.year}
+            onDelete={this.deleteHandler.bind(this, index)}
+            onChangeName={event => this.onChangeName(event.target.value, index)}
+          />
+        )
+      })
+    }
 
     return (
-        <div style={divStyle}>
-          <h1>{this.state.pageTitle}</h1>
+      <div style={divStyle}>
+        <h1>{this.state.pageTitle}</h1>
 
+        <button
+          onClick={this.toggleCarsHandler}
+        >Toggle cars</button>
 
-          <button onClick={this.toggleCarsHandler}>Toggle cars</button>
-
-          { this.state.showCars
-              ? this.state.cars.map((car, index) => {
-                return (
-                  <Car
-                    key={index}
-                    name={car.name}
-                    year={car.year}
-                    onDelete={this.deleteHandler.bind(this, index)}
-                    onChangeName={event => this.onChangeName(event.target.value, index)}
-                  />
-                )
-          }) : null
-        }
-        </div>
+          <div style={{
+            width: 400,
+            margin: 'auto',
+            paddingTop: '20px'
+          }}>
+            { cars }
+          </div>
+      </div>
     );
   }
 }
