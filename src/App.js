@@ -1,18 +1,25 @@
 import React, {Component} from 'react';
 import './App.css';
 import Car from './Car/Car'
+import ErrorBoundary from "./ErrorBoundary/ErrorBoundary"
+import Counter from "./Counter/Counter"
 
 class App extends Component{
 
-  state = {
-    cars: [
-      {name: 'Ford', year: 2018},
-      {name: 'Audi', year: 2016},
-      {name: 'Mazda', year: 2010}
-    ],
-    pageTitle: 'React components',
-    showCars: false
-  };
+  constructor(props) {
+    console.log('App constructor')
+    super(props)
+
+    this.state = {
+      cars: [
+        {name: 'Ford', year: 2018},
+        // {name: 'Audi', year: 2016},
+        // {name: 'Mazda', year: 2010}
+      ],
+      pageTitle: 'React components',
+      showCars: false
+    };
+  }
 
   toggleCarsHandler = () => {
     this.setState({
@@ -34,7 +41,16 @@ class App extends Component{
     this.setState({cars})
   }
 
+  componentWillMount() {
+    console.log('App componentWillMount')
+  }
+
+  componentDidMount() {
+    console.log('App componentDidMount')
+  }
+
   render() {
+    console.log('App render')
     const divStyle = {
       textAlign: 'center'
     }
@@ -44,22 +60,28 @@ class App extends Component{
     if (this.state.showCars) {
       cars = this.state.cars.map((car, index) => {
         return (
-          <Car
-            key={index}
-            name={car.name}
-            year={car.year}
-            onDelete={this.deleteHandler.bind(this, index)}
-            onChangeName={event => this.onChangeName(event.target.value, index)}
-          />
+            <ErrorBoundary key={index}>
+              <Car
+                name={car.name}
+                year={car.year}
+                onDelete={this.deleteHandler.bind(this, index)}
+                onChangeName={event => this.onChangeName(event.target.value, index)}
+              />
+            </ErrorBoundary>
         )
       })
     }
 
     return (
       <div style={divStyle}>
-        <h1>{this.state.pageTitle}</h1>
+        {/* <h1>{this.state.pageTitle}</h1> */}
+        <h1>{this.props.title}</h1>
+
+        <Counter />
+        <hr/>
 
         <button
+          className={'AppButton'}
           onClick={this.toggleCarsHandler}
         >Toggle cars</button>
 
